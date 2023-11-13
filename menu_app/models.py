@@ -15,6 +15,7 @@ class Basemodel(models.Model):
        ordering = ('id',)
 
 class Restaurant(Basemodel):
+    user = models.ForeignKey(User, PROTECT, null=True, blank=True)
     name = models.CharField(max_length=225, null=True, blank= False)
     adress = models.CharField(max_length=225)
     photo = models.FileField(upload_to='media', null=True, blank=False)
@@ -24,6 +25,7 @@ class Restaurant(Basemodel):
         return self.name
 
 class Category(Basemodel):
+    user = 'user'
     name = models.CharField(max_length=225)
 
     def __str__(self):
@@ -36,7 +38,7 @@ class Menu(Basemodel):
     description = models.CharField(max_length=225, null=True, blank=False)
     price = models.IntegerField(null=True, blank=False)
     photo = models.FileField()
-    category = models.ForeignKey(Category, CASCADE, null=True, blank=True)
+    category = models.ForeignKey(Category, CASCADE, null=True, blank=True, related_name='title')
     discount = models.BooleanField(default=True)
     restaurant = models.ForeignKey(Restaurant, CASCADE, null=True, blank=True)
 
@@ -45,3 +47,29 @@ class Menu(Basemodel):
 
 
 
+class Adress_table(Basemodel):
+    user = models.ForeignKey(User, CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=225)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+
+class Table(Basemodel):
+    TYPE = {
+        ('ELITE','ELITE'),
+        ('PREMIUM','PREMIUM'),
+        ('BUSSINES','BUSSINES'),
+        ('COMFORT','COMFORT'),
+    }
+    number = models.PositiveIntegerField()
+    type = models.CharField(max_length=225, choices=TYPE)
+    restaurant = models.ForeignKey(Restaurant, CASCADE, null=True, blank=True)
+    adress_table = models.ForeignKey(Adress_table, CASCADE)
+    percent = models.FloatField()
+
+    def __str__(self):
+        return f'Столик № {self.number}, Ресторан {self.restaurant.name}, Местоположение {self.adress_table.name}'
+
+ 

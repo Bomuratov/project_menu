@@ -1,11 +1,13 @@
-from django.urls import path
+from django.urls import include, path
 from .views import *
+from .routes import *
+
+
+
 
 urlpatterns = [
-    path("api/restaurant", restaurant.as_view({"post": "create"}), name="restaurant"),
-    path("api/restaurant_get", restaurant.as_view({"get": "list"}), name="restaurant"),
-    path("api/category", category.as_view({"post": "create"}), name="category"),
-    path("api/category_get", category.as_view({"get": "list"}), name="category"),
-    path("api/menu", menu.as_view({"post": "create"}), name="menu"),
-    path("api/menu_get", menu.as_view({"get": "list"}), name="menu"),
+    path("api/", include(router.urls)),
+    # path("api/menu/", Menu_view.as_view({"get": "list"}), name="menu"),
+    path("api/table/<str:name_restaurant>/", Table_view.as_view({"get": "list"}), name="table"),
+    path("api/menu/<str:name_restaurant>/", Menu_view.as_view({"get": "list"}), name="menu"),
 ]
